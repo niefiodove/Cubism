@@ -11,8 +11,9 @@ public class CubeMultiplier : MonoBehaviour
     private int _maximumCopies = 6;
     private List<GameObject> _creatingCopy = new();
 
-    public event Action<GameObject> Repaint;
-    public event Action<List<GameObject>> ScatterExplosion;
+    public event Action<Renderer> Repaint;
+    public event Action<List<GameObject>, Vector3> ScatterExplosion;
+    public event Action<GameObject> DestroyCube;
 
     private void OnEnable()
     {
@@ -24,18 +25,19 @@ public class CubeMultiplier : MonoBehaviour
         _catcherTouch.PassObject -= OnObjectReceived;
     }
 
-    private void OnObjectReceived(GameObject gameObject)
+    private void OnObjectReceived(SplitHandler splitHandler)
     {
-        _gameObject = gameObject;
+        _gameObject = splitHandler.gameObject;
 
-        if (gameObject.transform.gameObject.TryGetComponent<SplitHandler>(out SplitHandler splitHandler) && splitHandler.IsSplittable)
+        if (splitHandler.IsSplittable)
         {
+            Vector3 explosionPosition = _gameObject.transform.position;
             CreateCopies();
-            ScatterExplosion?.Invoke(_creatingCopy);
+            ScatterExplosion?.Invoke(_creatingCopy, explosionPosition);
             _creatingCopy.Clear();
         }
 
-        Destroy(gameObject);
+        DestroyCube?.Invoke(_gameObject);
     }
 
     private int DetermineNumberCopies()
@@ -50,7 +52,12 @@ public class CubeMultiplier : MonoBehaviour
             Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * 0.1f;
             GameObject newCube = Instantiate(_gameObject, _gameObject.transform.localPosition + randomOffset, Quaternion.identity);
             newCube.transform.localScale /= 2;
-            Repaint?.Invoke(newCube);
+
+            Renderer renderer = newCube.GetComponent<Renderer>();
+            
+            if (renderer != null)
+                Repaint?.Invoke(renderer);
+
             _creatingCopy.Add(newCube);
         }
     }

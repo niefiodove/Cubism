@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class Destroyer : MonoBehaviour
 {
-    [SerializeField] private Exploder _exploder;
+    [SerializeField] private CubeMultiplier _cubeMultiplier;
 
     private void OnEnable()
     {
-        _exploder.DestroyCube += DestroyMainCube;
+        _cubeMultiplier.DestroyCube += DestroyMainCube;
     }
 
     private void OnDisable()
     {
-        _exploder.DestroyCube -= DestroyMainCube;
+        _cubeMultiplier.DestroyCube -= DestroyMainCube;
     }
 
     private void DestroyMainCube(GameObject oldCube)

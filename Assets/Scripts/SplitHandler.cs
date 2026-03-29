@@ -14,8 +14,16 @@ public class SplitHandler : MonoBehaviour
 
     private void CalculateSplittable()
     {
-        float chanceSeparation = GetComponent<Renderer>().bounds.size.y * 100;
-        float randomChance = UnityEngine.Random.Range(_minimumChance, _maximumChance + 1);
+        Renderer renderer = GetComponent<Renderer>();
+
+        if (renderer == null)
+        {
+            IsSplittable = false;
+            return;
+        }
+
+        float chanceSeparation = renderer.bounds.size.y * 100;
+        float randomChance = Random.Range(_minimumChance, _maximumChance + 1);
         IsSplittable = chanceSeparation >= randomChance;
     }
 }

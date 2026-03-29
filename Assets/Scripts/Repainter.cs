@@ -14,10 +14,12 @@ public class Repainter : MonoBehaviour
         _cubeMultiplier.Repaint -= Repaint;
     }
 
-    private void Repaint(GameObject gameObject)
+    private void Repaint(Renderer renderer)
     {
-        Color randomColor = UnityEngine.Random.ColorHSV();
-        Renderer renderer = gameObject.GetComponent<Renderer>();
-        renderer.material.color = randomColor;
+        if (renderer != null)
+        {
+            Color randomColor = Random.ColorHSV();
+            renderer.material.color = randomColor;
+        }
     }
 }

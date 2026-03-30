@@ -16,10 +16,10 @@ public class Repainter : MonoBehaviour
 
     private void Repaint(Renderer renderer)
     {
-        if (renderer != null)
+        if (renderer)
         {
-            Color randomColor = Random.ColorHSV();
-            renderer.material.color = randomColor;
+            if (renderer.gameObject.TryGetComponent<Cube>(out Cube cube))
+                cube.SetColor();
         }
     }
 }

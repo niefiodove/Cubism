@@ -6,6 +6,7 @@ public class SplitHandler : MonoBehaviour
     private int _maximumChance = 100;
     private int _minimumCopies = 2;
     private int _maximumCopies = 6;
+    private int _chanceMultiplier = 100;
 
     public bool IsSplittable { get; private set; }
     public int NumberCopies { get; private set; }
@@ -26,7 +27,7 @@ public class SplitHandler : MonoBehaviour
             return;
         }
 
-        float chanceSeparation = renderer.bounds.size.y * 100;
+        float chanceSeparation = renderer.bounds.size.y * _chanceMultiplier;
         float randomChance = Random.Range(_minimumChance, _maximumChance + 1);
         IsSplittable = chanceSeparation >= randomChance;
     }

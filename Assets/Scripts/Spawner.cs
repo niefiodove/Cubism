@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private CatcherTouch _catcherTouch;
-    [SerializeField] private SplitHandler _cubePrefab;
+    [SerializeField] private Raycaster _raycaster;
+    [SerializeField] private Cube _cubePrefab;
     [SerializeField] private Rigidbody _plane;
     [SerializeField] private int _numberCubes;
+    [SerializeField] private float _spawnOffsetRadius = 0.1f;
+    [SerializeField] private float _copyScaleDivisor = 2f;
     [Range(1f, 5f)][SerializeField] private float _heightSpawn;
     private List<SplitHandler> _creatingCopy = new();
 
@@ -17,28 +19,22 @@ public class Spawner : MonoBehaviour
 
     private void OnEnable()
     {
-        _catcherTouch.PassObject += OnObjectCatched;
+        _raycaster.ObjectCatched += OnObjectCatched;
 
     }
 
     private void OnDisable()
     {
-        _catcherTouch.PassObject -= OnObjectCatched;
+        _raycaster.ObjectCatched -= OnObjectCatched;
     }
 
     private void Start()
     {
         for (int i = 0; i < _numberCubes; i++)
         {
-            GameObject newCube = Instantiate(_cubePrefab.gameObject, GetSpawnPosition(), Quaternion.identity);
-            Color randomColor = UnityEngine.Random.ColorHSV();
-
-            if (newCube.GetComponent<Renderer>() == null)
-                newCube.AddComponent<Renderer>();
-                
-        Renderer renderer = newCube.GetComponent<Renderer>();
-        renderer.material.color = randomColor;
-    }
+            Cube newCube = Instantiate(_cubePrefab, GetSpawnPosition(), Quaternion.identity);
+            newCube.SetColor();
+        }
 
         PassSizeCube?.Invoke(_cubePrefab.transform.localScale);
     }
@@ -70,9 +66,9 @@ public class Spawner : MonoBehaviour
 
         for (int i = 0; i < splitHandler.NumberCopies; i++)
         {
-            Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * 0.1f;
+            Vector3 randomOffset = UnityEngine.Random.insideUnitSphere * _spawnOffsetRadius;
             SplitHandler newCube = Instantiate(splitHandler, splitHandler.transform.localPosition + randomOffset, Quaternion.identity);
-            newCube.transform.localScale /= 2;
+            newCube.transform.localScale /= _copyScaleDivisor;
 
             Renderer renderer = newCube.GetComponent<Renderer>();
 

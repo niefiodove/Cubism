@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class InputReader : MonoBehaviour
 {
-    public event Action UserInput;
+    private const int LeftMouseButton = 0;
 
-    private const int _leftMouseButton = 0;
+    public event Action Leftmousebuttonispressed;
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(_leftMouseButton))
+        if (Input.GetMouseButtonDown(LeftMouseButton))
         {
-            UserInput?.Invoke();
+            Leftmousebuttonispressed?.Invoke();
         }
     }
 }

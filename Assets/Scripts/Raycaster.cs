@@ -7,27 +7,27 @@ public class Raycaster : MonoBehaviour
     [SerializeField] private LayerMask _raycastLayers;
     [SerializeField] private float _raycastSize;
 
-    public event Action<SplitHandler> ObjectCatched;
+    public event Action<Cube> ObjectCatched;
 
     private void OnEnable()
     {
-        _inputReader.Leftmousebuttonispressed += CatchedObject;
+        _inputReader.LeftMouseButtonPressed += CatchObject;
     }
 
     private void OnDisable()
     {
-        _inputReader.Leftmousebuttonispressed -= CatchedObject;
+        _inputReader.LeftMouseButtonPressed -= CatchObject;
     }
 
-    private void CatchedObject()
+    private void CatchObject()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit, _raycastSize, _raycastLayers))
         {
-            if (hit.transform.gameObject.TryGetComponent<SplitHandler>(out SplitHandler splitHandler))
-                ObjectCatched?.Invoke(splitHandler);
+            if (hit.transform.gameObject.TryGetComponent<Cube>(out Cube cube))
+                ObjectCatched?.Invoke(cube);
         }
     }
 }

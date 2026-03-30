@@ -3,26 +3,15 @@ using UnityEngine;
 
 public class Exploder : MonoBehaviour
 {
-    [SerializeField] private Spawner _spawner;
     [SerializeField] private float _explosionRadius;
     [SerializeField] private float _explosionForce;
 
-    private void OnEnable()
-    {
-        _spawner.ScatterExplosion += ScatterExplosion;
-    }
-
-    private void OnDisable()
-    {
-        _spawner.ScatterExplosion -= ScatterExplosion;
-    }
-
-    private void ScatterExplosion(List<SplitHandler> creatingCopy, Vector3 explosionPosition)
+    public void ScatterExplosion(List<Cube> cubes, Vector3 explosionPosition)
     {
 
-        foreach (var copy in creatingCopy)
+        foreach (var cube in cubes)
         {   
-            if (copy.TryGetComponent<Rigidbody>(out Rigidbody component))
+            if (cube.TryGetComponent<Rigidbody>(out Rigidbody component))
             {
                 component.AddExplosionForce(_explosionForce, explosionPosition, _explosionRadius);
             }

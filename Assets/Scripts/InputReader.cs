@@ -5,13 +5,13 @@ public class InputReader : MonoBehaviour
 {
     private const int LeftMouseButton = 0;
 
-    public event Action Leftmousebuttonispressed;
+    public event Action LeftMouseButtonPressed;
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(LeftMouseButton))
         {
-            Leftmousebuttonispressed?.Invoke();
+            LeftMouseButtonPressed?.Invoke();
         }
     }
 }

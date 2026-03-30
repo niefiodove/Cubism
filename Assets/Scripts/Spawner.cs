@@ -5,11 +5,10 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private CatcherTouch _catcherTouch;
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private SplitHandler _cubePrefab;
     [SerializeField] private Rigidbody _plane;
     [SerializeField] private int _numberCubes;
     [Range(1f, 5f)][SerializeField] private float _heightSpawn;
-
     private List<SplitHandler> _creatingCopy = new();
 
     public event Action<List<SplitHandler>, Vector3> ScatterExplosion;
@@ -27,15 +26,19 @@ public class Spawner : MonoBehaviour
         _catcherTouch.PassObject -= OnObjectCatched;
     }
 
-    void Start()
+    private void Start()
     {
         for (int i = 0; i < _numberCubes; i++)
         {
-            GameObject newCube = Instantiate(_cubePrefab, GetSpawnPosition(), Quaternion.identity);
+            GameObject newCube = Instantiate(_cubePrefab.gameObject, GetSpawnPosition(), Quaternion.identity);
             Color randomColor = UnityEngine.Random.ColorHSV();
-            Renderer renderer = newCube.GetComponent<Renderer>();
-            renderer.material.color = randomColor;
-        }
+
+            if (newCube.GetComponent<Renderer>() == null)
+                newCube.AddComponent<Renderer>();
+                
+        Renderer renderer = newCube.GetComponent<Renderer>();
+        renderer.material.color = randomColor;
+    }
 
         PassSizeCube?.Invoke(_cubePrefab.transform.localScale);
     }
@@ -79,10 +82,10 @@ public class Spawner : MonoBehaviour
             _creatingCopy.Add(newCube);
         }
 
-        ExplosionCall(_creatingCopy, splitHandler.transform.localPosition);
+        InvokeExplosion(_creatingCopy, splitHandler.transform.localPosition);
     }
 
-    private void ExplosionCall(List<SplitHandler> splitHandlers, Vector3 explosionPosition)
+    private void InvokeExplosion(List<SplitHandler> splitHandlers, Vector3 explosionPosition)
     {
         ScatterExplosion?.Invoke(splitHandlers, explosionPosition);
     }

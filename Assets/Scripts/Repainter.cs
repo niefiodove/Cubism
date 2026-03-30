@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class Repainter : MonoBehaviour
 {
-    [SerializeField] private CubeMultiplier _cubeMultiplier;
+    [SerializeField] private Spawner _spawner;
 
     private void OnEnable()
     {
-        _cubeMultiplier.Repaint += Repaint;
+        _spawner.Repaint += Repaint;
     }
 
     private void OnDisable()
     {
-        _cubeMultiplier.Repaint -= Repaint;
+        _spawner.Repaint -= Repaint;
     }
 
     private void Repaint(Renderer renderer)

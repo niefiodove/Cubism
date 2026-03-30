@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Exploder : MonoBehaviour
 {
-    [SerializeField] private CubeMultiplier _cubeMultiplier;
+    [SerializeField] private Spawner _spawner;
     [SerializeField] private float _explosionRadius;
     [SerializeField] private float _explosionForce;
 
@@ -11,15 +11,15 @@ public class Exploder : MonoBehaviour
 
     private void OnEnable()
     {
-        _cubeMultiplier.ScatterExplosion += ScatterExplosion;
+        _spawner.ScatterExplosion += ScatterExplosion;
     }
 
     private void OnDisable()
     {
-        _cubeMultiplier.ScatterExplosion -= ScatterExplosion;
+        _spawner.ScatterExplosion -= ScatterExplosion;
     }
 
-    private void ScatterExplosion(List<GameObject> creatingCopy, Vector3 explosionPosition)
+    private void ScatterExplosion(List<SplitHandler> creatingCopy, Vector3 explosionPosition)
     {
         _explosionPosition = explosionPosition;
 

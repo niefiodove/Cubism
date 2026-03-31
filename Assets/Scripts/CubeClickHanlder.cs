@@ -23,10 +23,12 @@ public class CubeClickHanlder : MonoBehaviour
 
     private void OnCubeCatched(Cube cube)
     {
-        if (cube.TryGetComponent<Renderer>(out Renderer renderer))
+        if (cube.TryGetComponent<Renderer>(out Renderer renderer) && cube.TryGetComponent<Collider>(out Collider collider))
         {
             if (CalculateSplittable(renderer))
-                _exploder.ScatterExplosion(_spawner.CreateCopies(cube, DetermineNumberCopies()), renderer.gameObject.transform.position);
+                _exploder.ScatterLocalExplosion(_spawner.CreateCopies(cube, DetermineNumberCopies()), renderer.gameObject.transform.position);
+            else
+                _exploder.ScatterGlobalExplosion(renderer.gameObject.transform.position, collider);
         }
 
         Destroy(cube.gameObject);
